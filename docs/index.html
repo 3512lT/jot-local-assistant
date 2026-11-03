@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#153f37"><meta name="description" content="จดไว้ — ผู้ช่วยส่วนตัวสำหรับงาน ความจำ และวันสำคัญ ด้วย AI บนเครื่องคุณ">
+  <title>จดไว้ — พื้นที่ให้งานเป็นระเบียบ</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="manifest" href="./manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;450;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css"><script src="./config.js"></script><script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">ข้ามไปเนื้อหา</a>
+  <aside class="sidebar">
+    <a class="brand" href="#dashboard" aria-label="จดไว้ หน้าภาพรวม"><span class="brand-icon">จ</span><span>จดไว้<small>YOUR EVERYDAY ASSISTANT</small></span></a>
+    <div class="workspace-label">พื้นที่ส่วนตัว <span>ส่วนตัว</span></div>
+    <nav aria-label="เมนูหลัก">
+      <button class="nav-item active" data-view="dashboard"><span data-icon="grid"></span>ภาพรวม<span class="nav-key">01</span></button>
+      <button class="nav-item" data-view="tasks"><span data-icon="checklist"></span>งานทั้งหมด<span id="sidebar-count" class="count">0</span></button>
+      <button class="nav-item" data-view="chat"><span data-icon="chat"></span>คุยกับผู้ช่วย<span class="tiny-dot"></span></button>
+    </nav>
+    <div class="sidebar-caption">เริ่มจากสิ่งเล็ก ๆ</div>
+    <button class="quick-note" id="quick-note"><span data-icon="plus"></span><div>มีอะไรต้องทำ?<small>เล่าให้จดไว้ฟังได้เลย</small></div><span data-icon="arrow"></span></button>
+    <div class="sidebar-bottom"><div class="local-model"><span class="model-mark" data-icon="spark"></span><div>Qwen3.5 9B<small id="model-status">กำลังเชื่อมต่อเครื่องคุณ</small></div><i id="model-dot" class="status-dot"></i></div>
+      <button class="nav-item" data-view="settings"><span data-icon="settings"></span>การเชื่อมต่อและแจ้งเตือน</button>
+      <div class="profile"><span class="avatar">ME</span><div>พื้นที่ของคุณ<small>งานและความจำอยู่บนเครื่องคุณ</small></div></div>
+    </div>
+  </aside>
+  <div class="app-shell">
+    <header class="topbar"><div class="breadcrumb">พื้นที่ส่วนตัว <span>/</span> <strong id="breadcrumb">ภาพรวม</strong></div><div class="top-actions"><span id="connection-pill" class="connection-pill"><i class="status-dot"></i>กำลังเชื่อมต่อ</span><button class="icon-button" id="notifications-button" aria-label="การแจ้งเตือน"><span data-icon="bell"></span><i id="notification-dot" hidden></i></button><span class="top-avatar">ME</span></div></header>
+    <div id="offline-banner" class="notice-banner" hidden><span data-icon="wifi"></span><span>ยังติดต่อเครื่องคุณไม่ได้ กำลังแสดงข้อมูลล่าสุดที่เคยเปิดไว้</span><button id="offline-settings">ตั้งค่าการเชื่อมต่อ</button></div>
+    <main id="main" tabindex="-1"></main>
+    <nav class="mobile-nav" aria-label="เมนูมือถือ"><button data-view="dashboard"><span data-icon="grid"></span>ภาพรวม</button><button data-view="tasks"><span data-icon="checklist"></span>งาน</button><button data-view="chat"><span data-icon="chat"></span>ผู้ช่วย</button><button data-view="settings"><span data-icon="settings"></span>ตั้งค่า</button></nav>
+  </div>
+  <dialog id="task-dialog"><form id="task-form"><div class="dialog-header"><div><span class="eyebrow">MAKE ROOM FOR WHAT MATTERS</span><h2 id="task-dialog-title">เพิ่มงานใหม่</h2></div><button type="button" class="icon-button" data-close-dialog aria-label="ปิด"><span data-icon="close"></span></button></div>
+    <input type="hidden" name="id"><label>ชื่องาน<input name="title" placeholder="เช่น เตรียมเอกสารประชุม" required maxlength="300"></label>
+    <div class="form-grid"><label>สถานะ<select name="status" aria-label="สถานะ"><option value="todo">ยังไม่เริ่ม</option><option value="doing">กำลังทำ</option><option value="waiting">รอข้อมูล / ติดขัด</option><option value="done">เสร็จแล้ว</option></select></label><label>ความสำคัญ<select name="priority" aria-label="ความสำคัญ"><option value="normal">ปกติ</option><option value="high">สำคัญมาก</option><option value="low">ไม่เร่งด่วน</option></select></label></div>
+    <label>โปรเจกต์ / หมวดหมู่<input name="project" placeholder="ทั่วไป" maxlength="100"></label>
+    <div class="form-grid"><label>กำหนดส่ง <small>เวลาไทย</small><input type="datetime-local" name="dueAt"></label><label>เตือนเมื่อ <small>ว่างไว้ = เตือนตอนครบกำหนด</small><input type="datetime-local" name="remindAt"></label></div>
+    <label>กำลังติดอะไรอยู่?<input name="blocker" placeholder="เช่น รอราคาจากซัพพลายเออร์" maxlength="2000"></label>
+    <label>รายละเอียด<textarea name="notes" rows="3" placeholder="สิ่งที่ควรรู้เกี่ยวกับงานนี้" maxlength="6000"></textarea></label>
+    <p class="form-error" id="task-error" role="alert"></p><div class="dialog-footer"><button type="button" id="archive-task" class="button text-danger" hidden>เก็บเข้าคลัง</button><div class="spacer"></div><button type="button" class="button secondary" data-close-dialog>ยกเลิก</button><button class="button primary" type="submit">บันทึกงาน<span data-icon="arrow"></span></button></div>
+  </form></dialog>
+  <dialog id="notification-dialog"><div class="dialog-header"><div><span class="eyebrow">A LITTLE NUDGE</span><h2>การแจ้งเตือนของคุณ</h2></div><button class="icon-button" data-close-dialog aria-label="ปิด"><span data-icon="close"></span></button></div><div id="notification-list"></div><button id="read-notifications" class="button secondary full">ทำเครื่องหมายว่าอ่านแล้ว</button></dialog>
+  <dialog id="archive-dialog"><div class="dialog-header"><h2>งานที่เก็บเข้าคลัง</h2><button class="icon-button" data-close-dialog aria-label="ปิด"><span data-icon="close"></span></button></div><div id="archive-list"></div></dialog>
+  <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+</body>
+</html>
