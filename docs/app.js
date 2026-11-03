@@ -67,6 +67,10 @@ function render({preserveScroll=false}={}){
 }
 function navigate(next){if(!VIEWS[next])return;view=next;history.replaceState(null,'','#'+next);render();if(view==='chat')$('#chat-input')?.focus({preventScroll:true});}
 function bindView(){
+  if(view==='settings'&&!['127.0.0.1','localhost'].includes(location.hostname)){
+    const helper=document.createElement('p');helper.style.marginTop='16px';helper.textContent='ถ้าเชื่อมจากเว็บนี้ไม่ได้ เบราว์เซอร์อาจต้องได้รับสิทธิ์เข้าถึงเครือข่ายในเครื่อง คุณเปิดใช้งานบนคอมโดยตรงได้จากปุ่มด้านล่าง หรือใช้ HTTPS ผ่าน Tailscale';
+    const localLink=document.createElement('a');localLink.href='http://127.0.0.1:8765/';localLink.className='button secondary';localLink.textContent='เปิดจดไว้บนคอมเครื่องนี้';localLink.target='_blank';localLink.rel='noopener noreferrer';$('#connection-form').append(helper,localLink);
+  }
   if(view==='tasks'){
     const archiveButton=document.createElement('button');archiveButton.className='button secondary';archiveButton.textContent='คลังงาน';$('.tasks-toolbar').append(archiveButton);
     archiveButton.onclick=async()=>{try{const archive=await api('/archive');$('#archive-list').innerHTML=archive.tasks.length?archive.tasks.map(t=>`<div class="notification-item"><div><strong>${esc(t.title)}</strong><small>${esc(t.project)}</small></div><div class="spacer"></div><button class="button secondary" data-restore="${t.id}">นำกลับมา</button></div>`).join(''):emptyState({title:'ยังไม่มีงานในคลัง',description:'งานที่เก็บเข้าคลังจะนำกลับมาได้จากหน้านี้'});$$('[data-restore]').forEach(button=>button.onclick=async()=>{try{await api('/tasks/'+button.dataset.restore+'/restore',{method:'POST'});button.closest('.notification-item').remove();await refresh(true);toast('นำงานกลับมาแล้ว');}catch(error){toast(error.message,{error:true});}});$('#archive-dialog').showModal();}catch(error){toast(error.message,{error:true});}};
